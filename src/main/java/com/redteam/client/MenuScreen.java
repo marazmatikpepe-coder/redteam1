@@ -13,7 +13,7 @@ public class MenuScreen extends Screen {
 
     @Override
     protected void init() {
-        int y = 40;
+        int y = 34;
         for (Module m : ModuleManager.MODULES) {
             ButtonWidget toggle = ButtonWidget.builder(label(m), b -> {
                 m.toggle();
@@ -25,7 +25,7 @@ public class MenuScreen extends Screen {
                 m.cycleMode();
                 toggle.setMessage(label(m));
             }).dimensions(width / 2 + 54, y, 46, 20).build());
-            y += 24;
+            y += 22;
         }
     }
 
