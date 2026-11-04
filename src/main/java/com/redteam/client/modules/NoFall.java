@@ -8,10 +8,10 @@ public class NoFall extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
-        if (p == null || mc.getNetworkHandler() == null) return;
+        var p = mc().player;
+        if (p == null || mc().getNetworkHandler() == null) return;
         if (p.fallDistance > 2.0f && !p.isOnGround()) {
-            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true, p.horizontalCollision));
+            mc().getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true, p.horizontalCollision));
         }
     }
 }

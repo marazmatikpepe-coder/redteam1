@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 public abstract class Module {
     public final String name;
     private boolean enabled;
-    protected final MinecraftClient mc = MinecraftClient.getInstance();
+    protected MinecraftClient mc() { return MinecraftClient.getInstance(); }
 
     protected Module(String name) { this.name = name; }
 

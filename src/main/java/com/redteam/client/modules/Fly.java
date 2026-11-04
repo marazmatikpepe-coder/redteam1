@@ -15,12 +15,12 @@ public class Fly extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
+        var p = mc().player;
         if (p == null) return;
         double s = fast ? 0.9 : 0.45;
-        double vy = mc.options.jumpKey.isPressed() ? 0.45 : mc.options.sneakKey.isPressed() ? -0.45 : 0.0;
+        double vy = mc().options.jumpKey.isPressed() ? 0.45 : mc().options.sneakKey.isPressed() ? -0.45 : 0.0;
         double vx = 0, vz = 0;
-        if (mc.options.forwardKey.isPressed()) {
+        if (mc().options.forwardKey.isPressed()) {
             double yaw = Math.toRadians(p.getYaw());
             vx = -MathHelper.sin((float) yaw) * s;
             vz = MathHelper.cos((float) yaw) * s;

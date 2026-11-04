@@ -28,25 +28,25 @@ public class AutoFight extends Module {
     protected void onDisable() { releaseKeys(); eatTicks = 0; }
 
     private void releaseKeys() {
-        mc.options.forwardKey.setPressed(false);
-        mc.options.sprintKey.setPressed(false);
-        mc.options.jumpKey.setPressed(false);
-        mc.options.useKey.setPressed(false);
+        mc().options.forwardKey.setPressed(false);
+        mc().options.sprintKey.setPressed(false);
+        mc().options.jumpKey.setPressed(false);
+        mc().options.useKey.setPressed(false);
     }
 
     @Override
     public void onTick() {
-        var p = mc.player;
-        var world = mc.world;
-        if (p == null || world == null || mc.interactionManager == null) return;
+        var p = mc().player;
+        var world = mc().world;
+        if (p == null || world == null || mc().interactionManager == null) return;
 
         if (eatCooldown > 0) eatCooldown--;
 
         // --- еда ---
         if (eatTicks > 0) {
             eatTicks--;
-            mc.options.useKey.setPressed(true);
-            if (eatTicks == 0) { mc.options.useKey.setPressed(false); eatCooldown = 100; }
+            mc().options.useKey.setPressed(true);
+            if (eatTicks == 0) { mc().options.useKey.setPressed(false); eatCooldown = 100; }
             return;
         }
         if (p.getHealth() <= 8.0f && eatCooldown == 0) {
@@ -65,15 +65,14 @@ public class AutoFight extends Module {
         LivingEntity target = null;
         double best = 20.0;
         for (Entity e : world.getEntities()) {
-            if (!(e instanceof LivingEntity le) || e == p || !le.isAlive()) continue;
-            if (!(e instanceof PlayerEntity) && !(e instanceof HostileEntity)) continue;
+            if (!Targets.valid(p, e, false)) continue;
             double d = p.distanceTo(e);
-            if (d < best) { best = d; target = le; }
+            if (d < best) { best = d; target = (LivingEntity) e; }
         }
         if (target == null) {
-            mc.options.forwardKey.setPressed(false);
-            mc.options.sprintKey.setPressed(false);
-            mc.options.jumpKey.setPressed(false);
+            mc().options.forwardKey.setPressed(false);
+            mc().options.sprintKey.setPressed(false);
+            mc().options.jumpKey.setPressed(false);
             return;
         }
 
@@ -82,20 +81,20 @@ public class AutoFight extends Module {
 
         // --- движение ---
         boolean far = best > 2.6;
-        mc.options.forwardKey.setPressed(far);
-        mc.options.sprintKey.setPressed(far);
-        mc.options.jumpKey.setPressed(p.horizontalCollision && p.isOnGround());
+        mc().options.forwardKey.setPressed(far);
+        mc().options.sprintKey.setPressed(far);
+        mc().options.jumpKey.setPressed(p.horizontalCollision && p.isOnGround());
 
         // --- удар ---
         if (best <= 3.0 && p.getAttackCooldownProgress(0.5f) >= 0.92f) {
-            mc.interactionManager.attackEntity(p, target);
+            mc().interactionManager.attackEntity(p, target);
             p.swingHand(Hand.MAIN_HAND);
             CheatLogger.log(name, "ATTACK", "dist=" + String.format("%.2f", best));
         }
     }
 
     private void selectWeapon() {
-        var inv = mc.player.getInventory();
+        var inv = mc().player.getInventory();
         int sword = -1, axe = -1;
         for (int i = 0; i < 9; i++) {
             ItemStack s = inv.getStack(i);
@@ -107,7 +106,7 @@ public class AutoFight extends Module {
     }
 
     private void aim(LivingEntity t) {
-        var p = mc.player;
+        var p = mc().player;
         var to = t.getBoundingBox().getCenter().subtract(p.getEyePos());
         float yaw = (float) (MathHelper.atan2(to.z, to.x) * 180.0 / Math.PI) - 90.0f;
         float pitch = (float) -(MathHelper.atan2(to.y, Math.sqrt(to.x * to.x + to.z * to.z)) * 180.0 / Math.PI);

@@ -13,7 +13,7 @@ public class Velocity extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
+        var p = mc().player;
         if (p == null) return;
         if (p.hurtTime == 9) {
             double f = full ? 0.0 : 0.5;

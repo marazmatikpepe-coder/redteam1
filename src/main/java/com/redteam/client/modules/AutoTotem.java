@@ -16,8 +16,8 @@ public class AutoTotem extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
-        if (p == null || mc.interactionManager == null) return;
+        var p = mc().player;
+        if (p == null || mc().interactionManager == null) return;
         if (cooldown > 0) { cooldown--; return; }
         if (p.getHealth() > 4.0f || p.hurtTime <= 0) return;
         if (p.getOffHandStack().isOf(Items.TOTEM_OF_UNDYING)) return;
@@ -32,7 +32,7 @@ public class AutoTotem extends Module {
         }
         if (found == -1) return;
 
-        mc.interactionManager.clickSlot(p.playerScreenHandler.syncId, found, 40, SlotActionType.SWAP, p);
+        mc().interactionManager.clickSlot(p.playerScreenHandler.syncId, found, 40, SlotActionType.SWAP, p);
         CheatLogger.log(name, "SWAP", "slot=" + found + ";hp=" + p.getHealth());
         cooldown = 10; // ~0.5 сек
     }

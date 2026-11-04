@@ -6,15 +6,15 @@ import com.redteam.client.CheatLogger;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Режимы:
- *  RAGE  - грубая версия: большая дистанция, мгновенный поворот, без проверок (лёгкая цель для античита).
+ * Режимы (кнопка «режим» листает по кругу):
+ *  LEGIT / все цели -> RAGE / все цели -> LEGIT / только враждебные и игроки -> RAGE / только враждебные и игроки.
+ *  RAGE  - грубая версия: большая дистанция, мгновенный поворот, без проверок.
  *  LEGIT - «человечная»: дистанция как у ванили, угол обзора, плавный поворот с шумом,
  *          случайная задержка, только видимые цели.
  */
@@ -22,31 +22,36 @@ public class KillAura extends Module {
     public enum Mode { RAGE, LEGIT }
 
     private Mode mode = Mode.LEGIT;
+    private boolean onlyHostile = false;
     private final Random rng = new Random();
     private int extraDelayTicks = 0;
 
     public KillAura() { super("KillAura"); }
 
     @Override public void cycleMode() {
-        mode = mode == Mode.RAGE ? Mode.LEGIT : Mode.RAGE;
+        if (mode == Mode.LEGIT && !onlyHostile) mode = Mode.RAGE;
+        else if (mode == Mode.RAGE && !onlyHostile) { mode = Mode.LEGIT; onlyHostile = true; }
+        else if (mode == Mode.LEGIT) mode = Mode.RAGE;
+        else { mode = Mode.LEGIT; onlyHostile = false; }
         CheatLogger.log(name, "MODE", getDetails());
     }
 
-    @Override public String getDetails() { return "mode=" + mode; }
+    @Override public String getDetails() {
+        return mode + (onlyHostile ? "/враждебные" : "/все");
+    }
 
     @Override
     public void onTick() {
-        var player = mc.player;
-        var world = mc.world;
-        if (player == null || world == null || mc.interactionManager == null) return;
+        var player = mc().player;
+        var world = mc().world;
+        if (player == null || world == null || mc().interactionManager == null) return;
 
         double reach = mode == Mode.RAGE ? 6.0 : 3.0;
         LivingEntity target = null;
         double best = Double.MAX_VALUE;
 
         for (Entity e : world.getEntities()) {
-            if (!(e instanceof LivingEntity le) || e == player || !le.isAlive()) continue;
-            if (!(e instanceof PlayerEntity) && !(e instanceof HostileEntity)) continue;
+            if (!Targets.valid(player, e, onlyHostile)) continue;
             double d = player.distanceTo(e);
             if (d > reach || d >= best) continue;
             if (mode == Mode.LEGIT) {
@@ -54,7 +59,7 @@ public class KillAura extends Module {
                 if (angleTo(player, e) > 70.0) continue; // только то, что почти перед глазами
             }
             best = d;
-            target = le;
+            target = (LivingEntity) e;
         }
         if (target == null) return;
 
@@ -64,14 +69,14 @@ public class KillAura extends Module {
         float needed = mode == Mode.RAGE ? 0.0f : 0.92f;
         if (player.getAttackCooldownProgress(0.5f) < needed) return;
 
-        mc.interactionManager.attackEntity(player, target);
+        mc().interactionManager.attackEntity(player, target);
         player.swingHand(Hand.MAIN_HAND);
         CheatLogger.log(name, "ATTACK", "mode=" + mode + ";dist=" + String.format("%.2f", best));
         if (mode == Mode.LEGIT) extraDelayTicks = rng.nextInt(3); // 0-2 тика случайной паузы
     }
 
     private void aim(LivingEntity t) {
-        var p = mc.player;
+        var p = mc().player;
         Vec3d eye = p.getEyePos();
         Vec3d to = t.getBoundingBox().getCenter().subtract(eye);
         float yaw = (float) (MathHelper.atan2(to.z, to.x) * 180.0 / Math.PI) - 90.0f;

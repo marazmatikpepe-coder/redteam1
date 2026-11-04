@@ -9,7 +9,7 @@ public class FastPlace extends Module {
     @Override
     public void onTick() {
         try {
-            ((MinecraftClientAccessor) mc).redteam$setItemUseCooldown(0);
+            ((MinecraftClientAccessor) mc()).redteam$setItemUseCooldown(0);
         } catch (Throwable ignored) {}
     }
 }

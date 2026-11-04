@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.redteam.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientAccessor",
+    "InteractionManagerAccessor"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

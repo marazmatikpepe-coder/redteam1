@@ -1,0 +1,14 @@
+{
+  "key.category.redteam.main": "RedTeam",
+  "key.redteam.menu": "Открыть меню RedTeam",
+  "key.redteam.toggle.killaura": "KillAura: вкл/выкл",
+  "key.redteam.toggle.autofight": "AutoFight: вкл/выкл",
+  "key.redteam.toggle.autototem": "AutoTotem: вкл/выкл",
+  "key.redteam.toggle.velocity": "Velocity: вкл/выкл",
+  "key.redteam.toggle.nofall": "NoFall: вкл/выкл",
+  "key.redteam.toggle.fly": "Fly: вкл/выкл",
+  "key.redteam.toggle.speed": "Speed: вкл/выкл",
+  "key.redteam.toggle.fastplace": "FastPlace: вкл/выкл",
+  "key.redteam.toggle.fastbreak": "FastBreak: вкл/выкл",
+  "key.redteam.toggle.antifire": "AntiFire: вкл/выкл"
+}

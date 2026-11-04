@@ -18,8 +18,8 @@ public class AntiFire extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
-        if (p == null || mc.interactionManager == null) return;
+        var p = mc().player;
+        if (p == null || mc().interactionManager == null) return;
         if (cooldown > 0) { cooldown--; return; }
 
         if (phase == 0) {
@@ -32,12 +32,12 @@ public class AntiFire extends Module {
             prevSlot = p.getInventory().getSelectedSlot();
             p.getInventory().setSelectedSlot(slot);
             p.setPitch(90f);
-            mc.interactionManager.interactItem(p, Hand.MAIN_HAND);
+            mc().interactionManager.interactItem(p, Hand.MAIN_HAND);
             phase = 1;
         } else {
             // забираем воду обратно
             p.setPitch(90f);
-            mc.interactionManager.interactItem(p, Hand.MAIN_HAND);
+            mc().interactionManager.interactItem(p, Hand.MAIN_HAND);
             if (prevSlot >= 0) p.getInventory().setSelectedSlot(prevSlot);
             phase = 0;
             cooldown = 40;

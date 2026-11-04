@@ -8,9 +8,9 @@ public class FastBreak extends Module {
 
     @Override
     public void onTick() {
-        if (mc.interactionManager == null) return;
+        if (mc().interactionManager == null) return;
         try {
-            ((InteractionManagerAccessor) mc.interactionManager).redteam$setBlockBreakingCooldown(0);
+            ((InteractionManagerAccessor) mc().interactionManager).redteam$setBlockBreakingCooldown(0);
         } catch (Throwable ignored) {}
     }
 }

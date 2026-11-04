@@ -15,8 +15,8 @@ public class Speed extends Module {
 
     @Override
     public void onTick() {
-        var p = mc.player;
-        if (p == null || !mc.options.forwardKey.isPressed()) return;
+        var p = mc().player;
+        if (p == null || !mc().options.forwardKey.isPressed()) return;
         if (p.isOnGround()) p.jump();
         double s = fast ? 0.55 : 0.32;
         double yaw = Math.toRadians(p.getYaw());
