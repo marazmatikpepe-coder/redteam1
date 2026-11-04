@@ -7,25 +7,31 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
-/** Простое меню: левая кнопка - включить/выключить чит, правая маленькая кнопка - сменить режим. */
+/** Меню в две колонки: большая кнопка - вкл/выкл чит, маленькая «режим» - сменить режим. */
 public class MenuScreen extends Screen {
+    private static final int ROWS = 7;
+
     public MenuScreen() { super(Text.literal("RedTeam Test Client")); }
 
     @Override
     protected void init() {
-        int y = 34;
+        int i = 0;
         for (Module m : ModuleManager.MODULES) {
+            int col = i / ROWS, row = i % ROWS;
+            int x = width / 2 - 208 + col * 212;
+            int y = 34 + row * 24;
+
             ButtonWidget toggle = ButtonWidget.builder(label(m), b -> {
                 m.toggle();
                 b.setMessage(label(m));
-            }).dimensions(width / 2 - 100, y, 150, 20).build();
+            }).dimensions(x, y, 160, 20).build();
             addDrawableChild(toggle);
 
             addDrawableChild(ButtonWidget.builder(Text.literal("режим"), b -> {
                 m.cycleMode();
                 toggle.setMessage(label(m));
-            }).dimensions(width / 2 + 54, y, 46, 20).build());
-            y += 22;
+            }).dimensions(x + 164, y, 44, 20).build());
+            i++;
         }
     }
 
@@ -37,6 +43,6 @@ public class MenuScreen extends Screen {
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
         super.render(ctx, mouseX, mouseY, delta);
-        ctx.drawCenteredTextWithShadow(textRenderer, "RedTeam Test Client", width / 2, 20, 0xFFFFFF);
+        ctx.drawCenteredTextWithShadow(textRenderer, "RedTeam Test Client", width / 2, 18, 0xFFFFFF);
     }
 }

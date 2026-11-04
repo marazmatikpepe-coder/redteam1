@@ -39,6 +39,7 @@ public class RedTeamClient implements ClientModInitializer {
             for (Map.Entry<Module, KeyBinding> e : TOGGLE_KEYS.entrySet()) {
                 while (e.getValue().wasPressed()) e.getKey().toggle();
             }
+            if (client.player != null) ModuleManager.applyDefaults();
             ModuleManager.tick();
         });
     }

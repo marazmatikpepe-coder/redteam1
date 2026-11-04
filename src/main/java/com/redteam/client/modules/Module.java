@@ -7,9 +7,10 @@ import net.minecraft.client.MinecraftClient;
 public abstract class Module {
     public final String name;
     private boolean enabled;
-    protected MinecraftClient mc() { return MinecraftClient.getInstance(); }
 
     protected Module(String name) { this.name = name; }
+
+    protected MinecraftClient mc() { return MinecraftClient.getInstance(); }
 
     public boolean isEnabled() { return enabled; }
 
@@ -22,10 +23,13 @@ public abstract class Module {
 
     public void toggle() { setEnabled(!enabled); }
 
+    /** Включён ли чит сразу при входе в мир. */
+    public boolean enabledByDefault() { return false; }
+
     /** Короткое описание текущих настроек для лога и меню. */
     public String getDetails() { return ""; }
 
-    /** Переключение режима/настройки по клику правой кнопкой в меню. */
+    /** Переключение режима/настройки (кнопка «режим» в меню). */
     public void cycleMode() {}
 
     protected void onEnable() {}
